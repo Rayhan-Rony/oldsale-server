@@ -14,7 +14,7 @@ app.get('/', (req, res) => {
     res.send('Achi Vai')
 })
 
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const uri = "mongodb+srv://oldphone:jobE1gxgSgFwRC45@cluster0.t1ebet1.mongodb.net/?retryWrites=true&w=majority";
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
 // client.connect(err => {
@@ -45,6 +45,27 @@ async function run() {
             const product = req.body
             const result = await productsCollection.insertOne(product)
             res.send(result)
+        })
+        app.put('/products/:id', async (req, res) => {
+            const id = req.params.id
+            console.log(id)
+            const filter = { _id: ObjectId(id) }
+            const options = { upsert: true }
+            const updatedDoc = {
+                $set: {
+                    soldStatus: 'sold'
+                }
+            }
+            const result = await productsCollection.updateOne(filter, updatedDoc, options)
+            res.send(result)
+        })
+        app.get('/myProducts', async (req, res) => {
+            const name = req.query.name
+            console.log(name)
+            const query = { sellersName: name }
+            console.log(query)
+            const products = await productsCollection.find(query).toArray()
+            res.send(products)
         })
         app.post('/users', async (req, res) => {
             const user = req.body
