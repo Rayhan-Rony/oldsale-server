@@ -85,6 +85,11 @@ async function run() {
             const result = await advertiseCollection.insertOne(item)
             res.send(result)
         })
+        app.get('/advertiseProducts', async (req, res) => {
+            const query = {}
+            const products = await advertiseCollection.find(query).toArray()
+            res.send(products)
+        })
     }
     finally {
 
