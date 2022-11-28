@@ -27,6 +27,7 @@ async function run() {
         const catergoriesCollection = client.db('OldPhone').collection('Categories')
         const productsCollection = client.db('OldPhone').collection('Products')
         const usersCollection = client.db('OldPhone').collection('Users')
+        const advertiseCollection = client.db('OldPhone').collection('Advertise')
 
 
         app.get('/categories', async (req, res) => {
@@ -60,10 +61,10 @@ async function run() {
             res.send(result)
         })
         app.get('/myProducts', async (req, res) => {
-            const name = req.query.name
-            console.log(name)
-            const query = { sellersName: name }
-            console.log(query)
+            const email = req.query.email
+
+            const query = { sellerEmail: email }
+
             const products = await productsCollection.find(query).toArray()
             res.send(products)
         })
@@ -75,9 +76,14 @@ async function run() {
         app.get('/users', async (req, res) => {
             const email = req.query.email
             const query = { email: email }
-            // console.log(email)
+
             const user = await usersCollection.find(query).toArray()
             res.send(user)
+        })
+        app.post('/advertise', async (req, res) => {
+            const item = req.body
+            const result = await advertiseCollection.insertOne(item)
+            res.send(result)
         })
     }
     finally {
