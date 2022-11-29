@@ -102,6 +102,11 @@ async function run() {
             const result = await productsCollection.deleteOne(query)
             res.send(result)
         })
+        app.get('/sellers', async (req, res) => {
+            const query = { role: "seller" }
+            const result = await usersCollection.find(query).toArray()
+            res.send(result)
+        })
 
     }
     finally {
