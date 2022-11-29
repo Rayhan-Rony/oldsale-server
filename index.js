@@ -90,6 +90,19 @@ async function run() {
             const products = await advertiseCollection.find(query).toArray()
             res.send(products)
         })
+        app.delete('/advertise/:id', async (req, res) => {
+            const id = req.params.id
+            const query = { id: id }
+            const result = await advertiseCollection.deleteOne(query)
+            res.send(result)
+        })
+        app.delete('/products/:id', async (req, res) => {
+            const id = req.params.id
+            const query = { _id: ObjectId(id) }
+            const result = await productsCollection.deleteOne(query)
+            res.send(result)
+        })
+
     }
     finally {
 
