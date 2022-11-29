@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express()
 const cors = require('cors');
+require('dotenv').config()
 
 const port = process.env.PORT || 5000
 
@@ -15,13 +16,10 @@ app.get('/', (req, res) => {
 })
 
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
-const uri = "mongodb+srv://oldphone:jobE1gxgSgFwRC45@cluster0.t1ebet1.mongodb.net/?retryWrites=true&w=majority";
+const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.t1ebet1.mongodb.net/?retryWrites=true&w=majority`;
+
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
-// client.connect(err => {
-//     const collection = client.db("test").collection("devices");
-//     // perform actions on the collection object
-//     client.close();
-// });
+
 async function run() {
     try {
         const catergoriesCollection = client.db('OldPhone').collection('Categories')
@@ -39,7 +37,7 @@ async function run() {
             const id = req.params.id
             const query = { category_id: (id) }
             const products = await productsCollection.find(query).toArray()
-            // console.log(id)
+
             res.send(products)
         })
         app.post('/products', async (req, res) => {
@@ -49,7 +47,7 @@ async function run() {
         })
         app.put('/products/:id', async (req, res) => {
             const id = req.params.id
-            console.log(id)
+
             const filter = { _id: ObjectId(id) }
             const options = { upsert: true }
             const updatedDoc = {
@@ -130,5 +128,5 @@ run().catch(console.error)
 
 
 app.listen(port, () => {
-    console.log('Ho Ho Amio')
+    console.log('Running')
 })
